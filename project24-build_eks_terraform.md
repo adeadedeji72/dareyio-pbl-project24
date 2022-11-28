@@ -237,7 +237,7 @@ module "eks_cluster" {
   }
 }
 ~~~
-8. Create a file – locals.tf to create local variables. Terraform does not allow assigning variable to variables. There is good reasons for that to avoid repeating your code unecessarily. So a terraform way to achieve this would be to use locals so that your code can be kept DRY
+8. Create a file – **locals.tf** to create local variables. Terraform does not allow assigning variable to variables. There is good reasons for that to avoid repeating your code unecessarily. So a terraform way to achieve this would be to use locals so that your code can be kept DRY
 ~~~
 # render Admin & Developer users list with the structure required by EKS module
 locals {
@@ -310,3 +310,18 @@ asg_instance_types             = [ { instance_type = "t3.small" }, { instance_ty
 autoscaling_minimum_size_by_az = 1
 autoscaling_maximum_size_by_az = 10
 ~~~
+10. Create file – provider.tf
+~~~
+provider "random" {
+}
+
+# get EKS authentication for being able to manage k8s objects from terraform
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+~~~
+11. Run terraform init
+
+12. Run Terraform plan – Your plan should have an output
