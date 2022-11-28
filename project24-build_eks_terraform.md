@@ -406,3 +406,18 @@ provider "kubernetes" {
 
 Plan: 1 to add, 0 to change, 0 to destroy.
 ~~~
+14. Create kubeconfig file using awscli.
+~~~
+aws eks update-kubeconfig --name tooling-app-eks --region eu-west-2 --kubeconfig kubeconfig
+~~~
+
+### DEPLOY APPLICATIONS WITH HELM ###
+Helm is the most popular tool used to deploy resources into kubernetes. That is because it has a rich set of features that allows deployments to be packaged as a unit. Rather than have multiple YAML files managed individually – which can quickly become messy.
+
+A Helm chart is a definition of the resources that are required to run an application in Kubernetes. Instead of having to think about all of the various deployments/services/volumes/configmaps/ etc that make up your application, you can use a command like
+~~~
+helm install stable/mysql
+~~~
+and Helm will make sure all the required resources are installed. In addition you will be able to tweak helm configuration by setting a single variable to a particular value and more or less resources will be deployed. For example, enabling slave for MySQL so that it can have read only replicas.
+
+Behind the scenes, a helm chart is essentially a bunch of YAML manifests that define all the resources required by the application. Helm takes care of creating the resources in Kubernetes (where they don’t exist) and removing old resources.
