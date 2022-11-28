@@ -518,3 +518,28 @@ make build
 ~~~
 sudo mv bin/helm /usr/local/bin/
 ~~~
+If maje doesn't work, follow this:
+1. go to:
+~~~
+https://helm.sh/docs/intro/install/
+~~~
+2. Download the 3.6.3 binary
+~~~
+wget https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz
+~~~
+3. Untar the file
+~~~
+tar -zxvf helm-v3.6.3-linux-amd64.tar.gz
+~~~
+4. Move the binary in in /usr/local/bin
+~~~
+sudo mv linux-amd64/helm /usr/local/bin/helm
+~~~
+5. Check the installation with version check
+~~~
+helm version
+~~~
+**Output:**
+~~~
+version.BuildInfo{Version:"v3.6.3", GitCommit:"d506314abfb5d21419df8c7e7e68012379db2354", GitTreeState:"clean", GoVersion:"go1.16.5"}
+~~~
