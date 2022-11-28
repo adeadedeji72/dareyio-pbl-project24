@@ -498,3 +498,23 @@ A values.yaml file that is part of the chart itself. This typically provides def
 When providing configuration on the command line, you can either supply a file of configuration values using the -f flag. We will see a lot more on this later on.
 
 ### Now lets setup Helm and begin to use it. ###
+1. Download the tar.gz file from the project’s Github release page. Or simply use wget to download version 3.6.3 directly
+~~~
+wget https://github.com/helm/helm/archive/refs/tags/v3.6.3.tar.gz
+~~~
+2. Unpack the tar.gz file
+~~~
+tar -zxvf v3.6.3.tar.gz
+~~~
+3. cd into the unpacked directory
+~~~
+cd helm-3.6.3
+~~~
+4. Build the source code using make utility
+~~~
+make build
+~~~
+5. Helm binary will be in the bin folder. Simply move it to the bin directory on your system. You cna check other tools to know where that is. fOr example, check where pwd utility is being called from by running which pwd. Assuming the output is /usr/local/bin. You can move the helm binary there.
+~~~
+sudo mv bin/helm /usr/local/bin/
+~~~
