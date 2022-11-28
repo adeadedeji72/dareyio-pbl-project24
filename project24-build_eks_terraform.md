@@ -325,3 +325,84 @@ provider "kubernetes" {
 11. Run terraform init
 
 12. Run Terraform plan – Your plan should have an output
+13. Run Terraform apply
+This will begin to create cloud resources, and fail at some point with the error
+~~~
+╷
+│ Error: Post "http://localhost/api/v1/namespaces/kube-system/configmaps": dial tcp [::1]:80: connect: connection refused
+│ 
+│   with module.eks-cluster.kubernetes_config_map.aws_auth[0],
+│   on .terraform/modules/eks-cluster/aws_auth.tf line 63, in resource "kubernetes_config_map" "aws_auth":
+│   63: resource "kubernetes_config_map" "aws_auth" {
+~~~
+That is because for us to connect to the cluster using the kubeconfig, Terraform needs to be able to connect and set the credentials correctly.
+
+### FIXING THE ERROR ###
+- Append to the file data.tf
+~~~
+# get EKS cluster info to configure Kubernetes and Helm providers
+data "aws_eks_cluster" "cluster" {
+  name = module.eks_cluster.cluster_id
+}
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks_cluster.cluster_id
+}
+~~~
+- Append to the file provider.tf
+~~~
+# get EKS authentication for being able to manage k8s objects from terraform
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+~~~
+- Run the init and plan again, you should see something similar to:
+~~~
+  # module.eks-cluster.kubernetes_config_map.aws_auth[0] will be created
+  + resource "kubernetes_config_map" "aws_auth" {
+      + data = {
+          + "mapAccounts" = jsonencode([])
+          + "mapRoles"    = <<-EOT
+                - "groups":
+                  - "system:bootstrappers"
+                  - "system:nodes"
+                  "rolearn": "arn:aws:iam::696742900004:role/tooling-app-eks20210718113602300300000009"
+                  "username": "system:node:{{EC2PrivateDNSName}}"
+            EOT
+          + "mapUsers"    = <<-EOT
+                - "groups":
+                  - "system:masters"
+                  "userarn": "arn:aws:iam::696742900004:user/dare"
+                  "username": "dare"
+                - "groups":
+                  - "system:masters"
+                  "userarn": "arn:aws:iam::696742900004:user/solomon"
+                  "username": "solomon"
+                - "groups":
+                  - "darey-io-eks-developers"
+                  "userarn": "arn:aws:iam::696742900004:user/leke"
+                  "username": "leke"
+                - "groups":
+                  - "darey-io-eks-developers"
+                  "userarn": "arn:aws:iam::696742900004:user/david"
+                  "username": "david"
+            EOT
+        }
+      + id   = (known after apply)
+
+      + metadata {
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/managed-by" = "Terraform"
+              + "terraform.io/module"          = "terraform-aws-modules.eks.aws"
+            }
+          + name             = "aws-auth"
+          + namespace        = "kube-system"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+~~~
