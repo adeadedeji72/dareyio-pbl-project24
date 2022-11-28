@@ -543,3 +543,22 @@ helm version
 ~~~
 version.BuildInfo{Version:"v3.6.3", GitCommit:"d506314abfb5d21419df8c7e7e68012379db2354", GitTreeState:"clean", GoVersion:"go1.16.5"}
 ~~~
+### DEPLOY JENKINS WITH HELM ###
+Before we begin to develop our own helm charts, lets make use of publicly available charts to deploy all the tools that we need.
+
+One of the amazing things about helm is the fact that you can deploy applications that are already packaged from a public helm repository directly with very minimal configuration. An example is Jenkins.
+
+1. Visit [Artifact Hub](https://artifacthub.io/packages/search) to find packaged applications as Helm Charts
+2. Search for Jenkins
+3. Add the repository to helm so that you can easily download and deploy
+~~~
+helm repo add jenkins https://charts.jenkins.io
+~~~
+3. Update helm repo
+~~~
+helm repo update 
+~~~
+4. Install the chart
+~~~
+helm install [RELEASE_NAME] jenkins/jenkins --kubeconfig [kubeconfig file]
+~~~
