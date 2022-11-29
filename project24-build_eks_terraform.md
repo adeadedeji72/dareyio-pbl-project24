@@ -562,3 +562,7 @@ helm repo update
 ~~~
 helm install [RELEASE_NAME] jenkins/jenkins --kubeconfig [kubeconfig file]
 ~~~
+Example
+~~~
+helm install jenkins jenkins/jenkins
+~~~
