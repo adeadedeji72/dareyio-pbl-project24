@@ -610,29 +610,33 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
 ~~~
 
 10. Now lets avoid calling the [kubeconfig file] everytime. Kubectl expects to find the default kubeconfig file in the location ~/.kube/config. But what if you already have another cluster using that same file? It doesn’t make sense to overwrite it. What you will do is to merge all the kubeconfig files together using a kubectl plugin called [konfig](https://github.com/corneliusweig/konfig) and select whichever one you need to be active.
-1. Install a package manager for kubectl called [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) so that it will enable you to install plugins to extend the functionality of kubectl. Read more about it [Here](https://github.com/kubernetes-sigs/krew)
+    1. Install a package manager for kubectl called [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) so that it will enable you to install   plugins to extend the functionality of kubectl. Read more about it [Here](https://github.com/kubernetes-sigs/krew)
 
-2. Install the [konfig plugin](https://github.com/corneliusweig/konfig)
-~~~
-  kubectl krew install konfig
-~~~
-3. Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
-~~~
-  sudo kubectl konfig import --save  [kubeconfig file]
-~~~
-4. Show all the contexts – Meaning all the clusters configured in your kubeconfig. If you have more than 1 Kubernetes clusters configured, you will see them all in the output.
-~~~
-  kubectl config get-contexts
-~~~
-5. Set the current context to use for all kubectl and helm commands
-~~~
-  kubectl config use-context [name of EKS cluster]
-~~~
-Test that it is working without specifying the --kubeconfig flag
-~~~
-  kubectl get po
-~~~
-**Output:**
-~~~
+    2. Install the [konfig plugin](https://github.com/corneliusweig/konfig)
+    ~~~
+    kubectl krew install konfig
+    ~~~
+    3. Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
+    ~~~
+    sudo kubectl konfig import --save  [kubeconfig file]
+    ~~~
+    4. Show all the contexts – Meaning all the clusters configured in your kubeconfig. If you have more than 1 Kubernetes clusters configured, you will         see them all in the output.
+    ~~~
+    kubectl config get-contexts
+    ~~~
+    5. Set the current context to use for all kubectl and helm commands
+    ~~~
+    kubectl config use-context [name of EKS cluster]
+    ~~~
+    6. Test that it is working without specifying the --kubeconfig flag
+    ~~~
+    kubectl get po
+    ~~~
+    **Output:**
+    ~~~
 
-~~~
+    ~~~
+    7. Display the current context. This will let you know the context in which you are using to interact with Kubernetes.
+    ~~~
+    kubectl config current-context
+    ~~~
