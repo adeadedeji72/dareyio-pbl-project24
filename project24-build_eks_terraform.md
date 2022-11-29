@@ -554,15 +554,85 @@ One of the amazing things about helm is the fact that you can deploy application
 ~~~
 helm repo add jenkins https://charts.jenkins.io
 ~~~
-3. Update helm repo
+4. Update helm repo
 ~~~
 helm repo update 
 ~~~
-4. Install the chart
+5. Install the chart
 ~~~
 helm install [RELEASE_NAME] jenkins/jenkins --kubeconfig [kubeconfig file]
 ~~~
 Example
 ~~~
 helm install jenkins jenkins/jenkins
+~~~
+**Output:**
+~~~
+
+~~~
+6. Check the Helm deployment
+~~~
+helm ls --kubeconfig [kubeconfig file]
+~~~
+**Output:**
+~~~
+
+~~~
+7. Check the pods
+~~~
+kubectl get pods --kubeconfig [kubeconfig file]
+~~~
+**Output:**
+~~~
+
+~~~
+8. Describe the running pod (review the output and try to understand what you see)
+~~~
+kubectl describe pod jenkins-0 --kubeconfig [kubeconfig file]
+~~~
+**Output:**
+~~~
+
+~~~
+9. Check the logs of the running pod
+~~~
+kubectl logs jenkins-0 --kubeconfig [kubeconfig file]
+~~~
+You will notice an **error*:
+~~~
+
+~~~
+This is because the pod has a Sidecar container alongside with the Jenkins container. As you can see fromt he error output, there is a list of containers inside the pod [jenkins config-reload] i.e jenkins and config-reload containers. The job of the config-reload is mainly to help Jenkins to reload its configuration without recreating the pod.
+
+Therefore we need to let kubectl know, which pod we are interested to see its log. Hence, the command will be updated like:
+~~~
+kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
+~~~
+
+10. Now lets avoid calling the [kubeconfig file] everytime. Kubectl expects to find the default kubeconfig file in the location ~/.kube/config. But what if you already have another cluster using that same file? It doesn’t make sense to overwrite it. What you will do is to merge all the kubeconfig files together using a kubectl plugin called [konfig](https://github.com/corneliusweig/konfig) and select whichever one you need to be active.
+1. Install a package manager for kubectl called [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) so that it will enable you to install plugins to extend the functionality of kubectl. Read more about it [Here](https://github.com/kubernetes-sigs/krew)
+
+2. Install the [konfig plugin](https://github.com/corneliusweig/konfig)
+~~~
+  kubectl krew install konfig
+~~~
+3. Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
+~~~
+  sudo kubectl konfig import --save  [kubeconfig file]
+~~~
+4. Show all the contexts – Meaning all the clusters configured in your kubeconfig. If you have more than 1 Kubernetes clusters configured, you will see them all in the output.
+~~~
+  kubectl config get-contexts
+~~~
+5. Set the current context to use for all kubectl and helm commands
+~~~
+  kubectl config use-context [name of EKS cluster]
+~~~
+Test that it is working without specifying the --kubeconfig flag
+~~~
+  kubectl get po
+~~~
+**Output:**
+~~~
+
 ~~~
