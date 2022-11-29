@@ -640,3 +640,16 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     kubectl config current-context
     ~~~
+11. Now that we can use kubectl without the --kubeconfig flag, Lets get access to the Jenkins UI. (In later projects we will further configure Jenkins. For now, it is to set up all the tools we need)
+
+    1. There are some commands that was provided on the screen when Jenkins was installed with Helm. See number 5 above. Get the password to the admin          user
+    ~~~
+    kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
+    ~~~
+    2. Use port forwarding to access Jenkins from the UI
+    ~~~
+    kubectl --namespace default port-forward svc/jenkins 8080:8080
+    ~~~
+    INSERT SCREENSHOT HERE
+    3. Go to the browser localhost:8080 and authenticate with the username and password from number 1 above
+    INSERT SCREENSHOT HERE
