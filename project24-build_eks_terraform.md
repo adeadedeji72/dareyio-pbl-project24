@@ -743,9 +743,9 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     Switched to context "arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks".
     ~~~
     6. Test that it is working without specifying the --kubeconfig flag
-~~~
+    ~~~
     kubectl get po
-~~~
+    ~~~
     **Output:**
     ~~~
     NAME        READY   STATUS    RESTARTS   AGE
