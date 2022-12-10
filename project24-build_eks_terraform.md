@@ -769,6 +769,6 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     kubectl --namespace default port-forward svc/jenkins 8080:8080
     ~~~
-    INSERT SCREENSHOT HERE
     3. Go to the browser localhost:8080 and authenticate with the username and password from number 1 above
-    INSERT SCREENSHOT HERE
+    ![](jenkins_login.png)
+    
