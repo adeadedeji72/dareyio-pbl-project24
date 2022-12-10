@@ -568,23 +568,52 @@ helm install jenkins jenkins/jenkins
 ~~~
 **Output:**
 ~~~
+NAME: jenkins
+LAST DEPLOYED: Sat Dec 10 09:18:12 2022
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get your 'admin' user password by running:
+  kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+2. Get the Jenkins URL to visit by running these commands in the same shell:
+  echo http://127.0.0.1:8080
+  kubectl --namespace default port-forward svc/jenkins 8080:8080
 
+3. Login with the password from step 1 and the username: admin
+4. Configure security realm and authorization strategy
+5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http://127.0.0.1:8080/configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+
+For more information on running Jenkins on Kubernetes, visit:
+https://cloud.google.com/solutions/jenkins-on-container-engine
+
+For more information about Jenkins Configuration as Code, visit:
+https://jenkins.io/projects/jcasc/
+
+
+NOTE: Consider using a custom image with pre-installed plugins
 ~~~
 6. Check the Helm deployment
 ~~~
 helm ls --kubeconfig [kubeconfig file]
+
+helm ls --kubeconfig kubeconfig
 ~~~
 **Output:**
 ~~~
-
+NAME    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
+jenkins default         1               2022-12-10 09:18:12.503476938 +0000 UTC deployed        jenkins-4.2.17  2.375.1
 ~~~
 7. Check the pods
 ~~~
 kubectl get pods --kubeconfig [kubeconfig file]
+
+kubectl get pods --kubeconfig kubeconfig
 ~~~
 **Output:**
 ~~~
-
+NAME        READY   STATUS    RESTARTS   AGE
+jenkins-0   2/2     Running   0          6m59s  
 ~~~
 8. Describe the running pod (review the output and try to understand what you see)
 ~~~
@@ -592,7 +621,28 @@ kubectl describe pod jenkins-0 --kubeconfig [kubeconfig file]
 ~~~
 **Output:**
 ~~~
+Name:             jenkins-0
+Namespace:        default
+Priority:         0
+Service Account:  jenkins
+Node:             ip-10-0-37-153.eu-west-2.compute.internal/10.0.37.153
+Start Time:       Sat, 10 Dec 2022 09:18:31 +0000
+Labels:           app.kubernetes.io/component=jenkins-controller
+                  app.kubernetes.io/instance=jenkins
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=jenkins
+                  controller-revision-hash=jenkins-55d6fd98d7
+                  statefulset.kubernetes.io/pod-name=jenkins-0
+Annotations:      checksum/config: 7b6cf8279a56bb7ca67e925218b2ead05ad1f60beba85964b3807af17fa9c1fe
+                  kubernetes.io/psp: eks.privileged
+Status:           Running
+IP:               10.0.38.132
+IPs:
+  IP:           10.0.38.132
+Controlled By:  StatefulSet/jenkins
+Init Containers:
 
+...
 ~~~
 9. Check the logs of the running pod
 ~~~
@@ -600,7 +650,47 @@ kubectl logs jenkins-0 --kubeconfig [kubeconfig file]
 ~~~
 You will notice an **error*:
 ~~~
-
+Defaulted container "jenkins" out of: jenkins, config-reload, init (init)
+Running from: /usr/share/jenkins/jenkins.war
+2022-12-10 09:19:10.329+0000 [id=1]     INFO    winstone.Logger#logInternal: Beginning extraction from war file
+2022-12-10 09:19:12.193+0000 [id=1]     WARNING o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
+2022-12-10 09:19:12.361+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: jetty-10.0.12; built: 2022-09-14T01:54:40.076Z; git: 408d0139887e27a57b54ed52e2d92a36731a7e88; jvm 11.0.17+8
+2022-12-10 09:19:13.117+0000 [id=1]     INFO    o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2022-12-10 09:19:13.284+0000 [id=1]     INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: Session workerName=node0
+2022-12-10 09:19:14.430+0000 [id=1]     INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
+2022-12-10 09:19:14.890+0000 [id=1]     INFO    o.e.j.s.handler.ContextHandler#doStart: Started w.@5a2bd7c8{Jenkins v2.375.1,/,file:///var/jenkins_cache/war/,AVAILABLE}{/var/jenkins_cache/war}
+2022-12-10 09:19:14.935+0000 [id=1]     INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@5c10f1c3{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+2022-12-10 09:19:14.972+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: Started Server@312ab28e{STARTING}[10.0.12,sto=0] @5947ms
+2022-12-10 09:19:14.979+0000 [id=23]    INFO    winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
+2022-12-10 09:19:15.541+0000 [id=30]    INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+2022-12-10 09:19:16.097+0000 [id=28]    INFO    hudson.PluginManager#considerDetachedPlugin: Loading a detached plugin as a dependency: /var/jenkins_home/plugins/javax-mail-api.jpi
+2022-12-10 09:19:16.886+0000 [id=31]    INFO    hudson.PluginManager#considerDetachedPlugin: Loading a detached plugin as a dependency: /var/jenkins_home/plugins/sshd.jpi
+2022-12-10 09:19:17.659+0000 [id=31]    INFO    hudson.PluginManager#considerDetachedPlugin: Loading a detached plugin as a dependency: /var/jenkins_home/plugins/command-launcher.jpi
+2022-12-10 09:19:17.680+0000 [id=31]    INFO    hudson.PluginManager#considerDetachedPlugin: Loading a detached plugin as a dependency: /var/jenkins_home/plugins/jdk-tool.jpi
+2022-12-10 09:19:19.134+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2022-12-10 09:19:24.613+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2022-12-10 09:19:24.677+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2022-12-10 09:19:24.741+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.codehaus.groovy.vmplugin.v7.Java7$1 (file:/var/jenkins_cache/war/WEB-INF/lib/groovy-all-2.4.21.jar) to constructor java.lang.invoke.MethodHandles$Lookup(java.lang.Class,int)
+WARNING: Please consider reporting this to the maintainers of org.codehaus.groovy.vmplugin.v7.Java7$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+2022-12-10 09:19:28.163+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
+2022-12-10 09:19:28.599+0000 [id=28]    WARNING i.j.p.casc.BaseConfigurator#createAttribute: Can't handle class org.csanchez.jenkins.plugins.kubernetes.PodTemplate#listener: type is abstract but not Describable.
+2022-12-10 09:19:29.515+0000 [id=28]    WARNING i.j.p.casc.BaseConfigurator#createAttribute: Can't handle class org.csanchez.jenkins.plugins.kubernetes.PodTemplate#listener: type is abstract but not Describable.
+2022-12-10 09:19:30.133+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
+2022-12-10 09:19:30.134+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2022-12-10 09:19:30.154+0000 [id=30]    INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+2022-12-10 09:19:30.187+0000 [id=47]    INFO    hudson.util.Retrier#start: Attempt #1 to do the action check updates server
+2022-12-10 09:19:30.211+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2022-12-10 09:19:30.284+0000 [id=22]    INFO    hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running
+2022-12-10 09:19:30.781+0000 [id=14]    INFO    i.j.p.casc.TokenReloadAction#doIndex: Configuration reload triggered via token
+2022-12-10 09:19:30.852+0000 [id=14]    WARNING i.j.p.casc.BaseConfigurator#createAttribute: Can't handle class org.csanchez.jenkins.plugins.kubernetes.PodTemplate#listener: type is abstract but not Describable.
+2022-12-10 09:19:31.460+0000 [id=14]    WARNING i.j.p.casc.BaseConfigurator#createAttribute: Can't handle class org.csanchez.jenkins.plugins.kubernetes.PodTemplate#listener: type is abstract but not Describable.
+2022-12-10 09:19:57.864+0000 [id=47]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tasks.Maven.MavenInstaller
+2022-12-10 09:19:59.019+0000 [id=47]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tools.JDKInstaller
+2022-12-10 09:19:59.021+0000 [id=47]    INFO    hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt #1
 ~~~
 This is because the pod has a Sidecar container alongside with the Jenkins container. As you can see fromt he error output, there is a list of containers inside the pod [jenkins config-reload] i.e jenkins and config-reload containers. The job of the config-reload is mainly to help Jenkins to reload its configuration without recreating the pod.
 
