@@ -772,3 +772,69 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     3. Go to the browser localhost:8080 and authenticate with the username and password from number 1 above
     ![](jenkins_login.png)
     
+
+### Install These Tools with helm ###
+
+1. Artifactory
+
+Add the jfrog repository
+~~~
+helm repo add jfrog https://charts.jfrog.io
+~~~
+
+**Output:**
+~~~
+"jfrog" has been added to your repositories
+~~~
+
+Update helm repository
+~~~
+helm repo update
+~~~
+**Output:**
+~~~
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "jenkins" chart repository
+...Successfully got an update from the "jfrog" chart repository
+Update Complete. ⎈Happy Helming!⎈
+~~~
+
+Install jfrog artifactory chart
+~~~
+helm upgrade --install artifactory --namespace artifactory jfrog/artifactory
+~~~
+**Output:**
+
+~~~
+Release "artifactory" does not exist. Installing it now.
+NAME: artifactory
+LAST DEPLOYED: Sat Dec 10 12:02:14 2022
+NAMESPACE: artifactory
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Congratulations. You have just deployed JFrog Artifactory!
+
+1. Get the Artifactory URL by running these commands:
+
+   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+         You can watch the status of the service by running 'kubectl get svc --namespace artifactory -w artifactory-artifactory-nginx'
+   export SERVICE_IP=$(kubectl get svc --namespace artifactory artifactory-artifactory-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+   echo http://$SERVICE_IP/
+
+2. Open Artifactory in your browser
+   Default credential for Artifactory:
+   user: admin
+   password: password
+~~~
+
+Get status of the pod
+~~~
+kubectl get svc --namespace artifactory -w artifactory-artifactory-nginx'
+~~~
+
+**Output:**
+~~~
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP                                                               PORT(S)                      AGE
+artifactory-artifactory-nginx   LoadBalancer   172.20.73.18   a2238448976a944919b0535786804975-2070025491.eu-west-2.elb.amazonaws.com   80:31538/TCP,443:30637/TCP   3m21s
