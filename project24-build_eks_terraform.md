@@ -703,7 +703,7 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     1. Install a package manager for kubectl called [krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) so that it will enable you to install   plugins to extend the functionality of kubectl. Read more about it [Here](https://github.com/kubernetes-sigs/krew)
 
     2. Install the [konfig plugin](https://github.com/corneliusweig/konfig)
-~~~
+
     (
   set -x; cd "$(mktemp -d)" &&
   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
@@ -713,7 +713,6 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
   tar zxvf "${KREW}.tar.gz" &&
   ./"${KREW}" install krew
    )
-~~~
  
     Add the $HOME/.krew/bin directory to your PATH environment variable
 ~~~
