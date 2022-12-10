@@ -715,13 +715,15 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
    )
  
     Add the $HOME/.krew/bin directory to your PATH environment variable
-~~~
+    ~~~
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-~~~
+    ~~~
+    
     3. Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
-~~~
+    ~~~
     sudo kubectl konfig import --save  [kubeconfig file]
-~~~
+    ~~~
+    
     4. Show all the contexts – Meaning all the clusters configured in your kubeconfig. If you have more than 1 Kubernetes clusters configured, you will         see them all in the output.
 ~~~
     kubectl config get-contexts
