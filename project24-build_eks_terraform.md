@@ -725,23 +725,23 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     
     4. Show all the contexts – Meaning all the clusters configured in your kubeconfig. If you have more than 1 Kubernetes clusters configured, you will         see them all in the output.
-~~~
+    ~~~
     kubectl config get-contexts
-~~~
+    ~~~
     **Output:**
-~~~
+    ~~~
     CURRENT   NAME                                                                CLUSTER                                                             AUTHINFO                                                            NAMESPACE
 *         arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          
           arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice 
-~~~
+    ~~~
     5. Set the current context to use for all kubectl and helm commands
-~~~
+    ~~~
     kubectl config use-context [name of EKS cluster]
-~~~
+    ~~~
     **Output:**
-~~~
+    ~~~
     Switched to context "arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks".
-~~~
+    ~~~
     6. Test that it is working without specifying the --kubeconfig flag
 ~~~
     kubectl get po
