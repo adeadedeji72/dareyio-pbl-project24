@@ -763,7 +763,7 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
 
     1. There are some commands that was provided on the screen when Jenkins was installed with Helm. See number 5 above. Get the password to the admin          user
     ~~~
-    kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
+    kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
     ~~~
     2. Use port forwarding to access Jenkins from the UI
     ~~~
