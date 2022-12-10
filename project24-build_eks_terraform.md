@@ -730,9 +730,9 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     **Output:**
     ~~~
-    CURRENT   NAME                                                                CLUSTER                                                             AUTHINFO                                                            NAMESPACE
-*         arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          
-          arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice 
+    CURRENT   NAME                                                                CLUSTER                                                                     AUTHINFO                                                            NAMESPACE
+    *         arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks                 arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          
+          arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice               arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice 
     ~~~
     5. Set the current context to use for all kubectl and helm commands
     ~~~
