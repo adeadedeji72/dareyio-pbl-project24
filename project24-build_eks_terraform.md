@@ -749,7 +749,7 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     **Output:**
     ~~~
     NAME        READY   STATUS    RESTARTS   AGE
-jenkins-0   2/2     Running   0          60m
+    jenkins-0   2/2     Running   0          60m
     ~~~
     7. Display the current context. This will let you know the context in which you are using to interact with Kubernetes.
     ~~~
