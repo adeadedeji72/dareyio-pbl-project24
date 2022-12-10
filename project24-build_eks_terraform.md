@@ -704,7 +704,19 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
 
     2. Install the [konfig plugin](https://github.com/corneliusweig/konfig)
     ~~~
-    kubectl krew install konfig
+    (
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+   )
+    ~~~
+    Add the $HOME/.krew/bin directory to your PATH environment variable
+    ~~~
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
     ~~~
     3. Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
     ~~~
@@ -714,9 +726,19 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     kubectl config get-contexts
     ~~~
+    **Output:**
+    ~~~
+    CURRENT   NAME                                                                CLUSTER                                                             AUTHINFO                                                            NAMESPACE
+*         arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks          
+          arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice   arn:aws:eks:us-east-1:762376985576:cluster/terraform-eks-practice 
+    ~~~
     5. Set the current context to use for all kubectl and helm commands
     ~~~
     kubectl config use-context [name of EKS cluster]
+    ~~~
+    **Output:**
+    ~~~
+    Switched to context "arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks".
     ~~~
     6. Test that it is working without specifying the --kubeconfig flag
     ~~~
@@ -724,11 +746,16 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
     ~~~
     **Output:**
     ~~~
-
+    NAME        READY   STATUS    RESTARTS   AGE
+jenkins-0   2/2     Running   0          60m
     ~~~
     7. Display the current context. This will let you know the context in which you are using to interact with Kubernetes.
     ~~~
     kubectl config current-context
+    ~~~
+    **Output:**
+    ~~~
+    arn:aws:eks:eu-west-2:762376985576:cluster/tooling-app-eks
     ~~~
 11. Now that we can use kubectl without the --kubeconfig flag, Lets get access to the Jenkins UI. (In later projects we will further configure Jenkins. For now, it is to set up all the tools we need)
 
