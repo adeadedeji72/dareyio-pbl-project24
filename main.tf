@@ -1,7 +1,7 @@
 provider "aws" {
 region = "us-east-1"
-access_key = "AKIA3DAJVTPUPOECXQRK"
-secret_key = "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"
+access_key = "AKIAQRK"
+secret_key = "xbMo+6UUuulcgbvE+ZKj4"
 }
 
 # resource "aws_dynamodb_table" "terraform_locks" {
