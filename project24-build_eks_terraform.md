@@ -838,3 +838,38 @@ kubectl get svc --namespace artifactory -w artifactory-artifactory-nginx'
 ~~~
 NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP                                                               PORT(S)                      AGE
 artifactory-artifactory-nginx   LoadBalancer   172.20.73.18   a2238448976a944919b0535786804975-2070025491.eu-west-2.elb.amazonaws.com   80:31538/TCP,443:30637/TCP   3m21s
+~~~
+#### Install Grafana ####
+1. Add the bitnami grafana repository
+~~~
+helm repo add bitnami https://charts.bitnami.com/bitnami
+~~~
+2. Install the helm chart
+~~~
+helm install my-grafana bitnami/grafana --version 8.2.21
+~~~
+The above command installs version 8.2.21
+
+**Output:**
+~~~
+AME: my-grafana
+LAST DEPLOYED: Wed Dec 21 19:06:02 2022
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: grafana
+CHART VERSION: 8.2.21
+APP VERSION: 9.3.2
+
+** Please be patient while the chart is being deployed **
+
+1. Get the application URL by running these commands:
+    echo "Browse to http://127.0.0.1:8080"
+    kubectl port-forward svc/my-grafana 8080:3000 &
+
+2. Get the admin credentials:
+
+    echo "User: admin"
+~~~
