@@ -878,4 +878,11 @@ APP VERSION: 9.3.2
 kubectl port-forward svc/my-grafana 8080:3000 &
 ~~~
 4. Access grafana by going to 127.0.0.1:8080
+
 ![](grafana_login.png)
+
+5. Get the admin credentials:
+~~~
+    echo "User: admin"
+    echo "Password: $(kubectl get secret my-grafana-admin --namespace default -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
+~~~
