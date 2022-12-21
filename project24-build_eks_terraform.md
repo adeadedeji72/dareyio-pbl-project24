@@ -886,3 +886,7 @@ kubectl port-forward svc/my-grafana 8080:3000 &
     echo "User: admin"
     echo "Password: $(kubectl get secret my-grafana-admin --namespace default -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
 ~~~
+
+6. Login to grafana Dashboard
+
+![](grafana_dashboard.png)
