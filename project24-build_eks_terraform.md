@@ -873,3 +873,9 @@ APP VERSION: 9.3.2
 
     echo "User: admin"
 ~~~
+3. Port-forward the service to 8080
+~~~
+kubectl port-forward svc/my-grafana 8080:3000 &
+~~~
+4. Access grafana by going to 127.0.0.1:8080
+![](grafana_login.png)
