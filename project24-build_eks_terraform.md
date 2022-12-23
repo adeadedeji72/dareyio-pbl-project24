@@ -775,7 +775,7 @@ kubectl logs jenkins-0 -c jenkins --kubeconfig [kubeconfig file]
 
 ### Install These Tools with helm ###
 
-1. Artifactory
+1. **Artifactory**
 
 Add the jfrog repository
 ~~~
@@ -890,3 +890,135 @@ kubectl port-forward svc/my-grafana 8080:3000 &
 6. Login to grafana Dashboard
 
 ![](grafana_dashboard.png)
+
+#### Install Elasticsearch ELK using ECK ####
+
+1. Add the Elasticsearch ELK [](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-install-helm.html)
+~~~
+helm repo add elastic https://helm.elastic.co
+~~~
+2. Update the repos
+~~~
+helm repo update
+~~~
+3. Install the helm chart
+~~~
+helm install elastic-operator elastic/eck-operator -n elastic-system --create-namespace
+~~~
+
+
+**Output:**
+~~~
+AME: elastic-operator
+LAST DEPLOYED: Fri Dec 23 22:30:25 2022
+NAMESPACE: elastic-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Inspect the operator logs by running the following command:
+   kubectl logs -n elastic-system sts/elastic-operator
+~~~
+4 Check if the pod is running
+~~~
+kubectl get pods -n elastic-system
+~~~
+**Output:**
+~~~
+NAME                 READY   STATUS    RESTARTS      AGE
+elastic-operator-0   1/1     Running   1 (74s ago)   109s
+~~~
+5. Describe the pod to see more details
+~~~
+kubectl describe pod elastic-operator-0 -n elastic-system
+~~~
+
+**Output:**
+~~~
+Name:             elastic-operator-0
+Namespace:        elastic-system
+Priority:         0
+Service Account:  elastic-operator
+Node:             ip-10-0-6-57.us-west-1.compute.internal/10.0.6.57
+Start Time:       Fri, 23 Dec 2022 22:30:50 +0000
+Labels:           app.kubernetes.io/instance=elastic-operator
+                  app.kubernetes.io/name=elastic-operator
+                  controller-revision-hash=elastic-operator-6976c45fd5
+                  statefulset.kubernetes.io/pod-name=elastic-operator-0
+Annotations:      checksum/config: 9955c97f28ca9217a21a40fcd558e28fb52f6f9d8d25a1ad541cbca0a2cf5cef
+                  co.elastic.logs/raw:
+                    [{"type":"container","json.keys_under_root":true,"paths":["/var/log/containers/*${data.kubernetes.container.id}.log"],"processors":[{"conv...
+                  kubernetes.io/psp: eks.privileged
+Status:           Running
+IP:               10.0.5.231
+IPs:
+  IP:           10.0.5.231
+Controlled By:  StatefulSet/elastic-operator
+Containers:
+  manager:
+    Container ID:  docker://9668a8bfab88eb15995d7baf8e59fee8fbf0e3a7dba4587d1521b3704ea6c500
+    Image:         docker.elastic.co/eck/eck-operator:2.5.0
+    Image ID:      docker-pullable://docker.elastic.co/eck/eck-operator@sha256:24da6835887273ae3b916ce072c1298b7f2617622d54b793889c33e2ba51ae79
+    Port:          9443/TCP
+    Host Port:     0/TCP
+    Args:
+      manager
+      --config=/conf/eck.yaml
+    State:          Running
+      Started:      Fri, 23 Dec 2022 22:31:26 +0000
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 23 Dec 2022 22:30:54 +0000
+      Finished:     Fri, 23 Dec 2022 22:31:25 +0000
+    Ready:          True
+    Restart Count:  1
+    Limits:
+      cpu:     1
+      memory:  1Gi
+    Requests:
+      cpu:     100m
+      memory:  150Mi
+    Environment:
+      OPERATOR_NAMESPACE:  elastic-system (v1:metadata.namespace)
+      POD_IP:               (v1:status.podIP)
+      WEBHOOK_SECRET:      elastic-operator-webhook-cert
+    Mounts:
+      /conf from conf (ro)
+      /tmp/k8s-webhook-server/serving-certs from cert (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-x6rzf (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  conf:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      elastic-operator
+    Optional:  false
+  cert:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  elastic-operator-webhook-cert
+    Optional:    false
+  kube-api-access-x6rzf:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age                   From               Message
+  ----    ------     ----                  ----               -------
+  Normal  Scheduled  4m8s                  default-scheduler  Successfully assigned elastic-system/elastic-operator-0 to ip-10-0-6-57.us-west-1.compute.internal
+  Normal  Pulling    4m7s                  kubelet            Pulling image "docker.elastic.co/eck/eck-operator:2.5.0"
+  Normal  Pulled     4m5s                  kubelet            Successfully pulled image "docker.elastic.co/eck/eck-operator:2.5.0" in 2.71268468s
+  Normal  Created    3m32s (x2 over 4m5s)  kubelet            Created container manager
+  Normal  Started    3m32s (x2 over 4m4s)  kubelet            Started container manager
+  Normal  Pulled     3m32s                 kubelet            Container image "docker.elastic.co/eck/eck-operator:2.5.0" already present on machine
+~~~
